@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[AI for Science] 3월 : 주요국 AI for Science 투자 현황과 국가 경쟁력 전략</title>
+    <!-- CSS styles for earthy warm typography, full screen canvas -->
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1A1210; /* Dark earthy background */
+            color: #F4EFEA; /* Cream text */
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            pointer-events: none;
+            /* Radial radial gradient using warm dark tones */
+            background: radial-gradient(circle at center, rgba(62,43,37,0.4) 0%, rgba(26,18,16,0.9) 100%);
+        }
+        .date-badge {
+            display: inline-block;
+            border: 1px solid rgba(221,202,180,0.5); /* Beige */
+            border-radius: 50px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            color: #DDCAB4;
+            backdrop-filter: blur(5px);
+            text-transform: uppercase;
+            animation: fadeIn 2s ease-out;
+        }
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin: 0 0 16px 0;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(138,74,51,0.5); /* Rust glow */
+            max-width: 85%;
+            word-break: keep-all;
+            line-height: 1.2;
+            animation: slideUp 1.5s ease-out;
+            color: #F4EFEA;
+        }
+        .subtitle {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #C2A482; /* Warm tan */
+            margin-bottom: 24px;
+            max-width: 80%;
+            word-break: keep-all;
+            animation: slideUp 1.8s ease-out;
+        }
+        p.description {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #A39D9B; /* Greyish warm */
+            margin-bottom: 48px;
+            max-width: 60%;
+            line-height: 1.6;
+            word-break: keep-all;
+            animation: slideUp 2.1s ease-out;
+        }
+        .cta-button {
+            pointer-events: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 48px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #FFF;
+            background-color: #8A4A33; /* Rust/Terracotta */
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 20px rgba(138,74,51,0.4);
+            position: relative;
+            overflow: hidden;
+            animation: zoomIn 2.5s ease-out;
+        }
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(138,74,51,0.6);
+            background-color: #9D5B42;
+        }
+        .cta-button:hover::before {
+            transform: translateX(100%);
+        }
+        .event-info {
+            margin-top: 60px;
+            font-size: 0.9rem;
+            color: #899276; /* Olive/Sage */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(137,146,118,0.3);
+            padding-top: 24px;
+            animation: fadeIn 3s ease-out;
+        }
+        
+        /* Loading Overlay */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #1A1210;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #F4EFEA;
+            font-family: 'Pretendard', sans-serif;
+            transition: opacity 1s ease;
+        }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid rgba(221,202,180,0.3);
+            border-top-color: #DDCAB4;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+        }
+        
+        /* Keyframes */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes slideUp { 
+            0% { opacity: 0; transform: translateY(30px); } 
+            100% { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes fadeIn { 
+            0% { opacity: 0; } 
+            100% { opacity: 1; } 
+        }
+        @keyframes zoomIn { 
+            0% { opacity: 0; transform: scale(0.9); } 
+            100% { opacity: 1; transform: scale(1); } 
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            .subtitle { font-size: 1.5rem; }
+            p.description { max-width: 80%; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+    
+    <!-- Content Overlay -->
+    <div class="content">
+        <div class="date-badge">모두의연구소 | 3월 행사</div>
+        <h1>AI for Science</h1>
+        <div class="subtitle">주요국 투자 현황과 국가 경쟁력 전략</div>
+        <p class="description">글로벌 AI for Science 투자 동향과 국가 차원의 전략적 대응 방향을 심도 있게 탐구하는 자리로 여러분을 초대합니다.</p>
+        <a href="https://modulabs.co.kr/community/momos/554" target="_blank" class="cta-button">과정 자세히 보기</a>
+        <div class="event-info">
+            HOSTED BY MODULABS | ONLINE & OFFLINE EVENT
+        </div>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Init Scene
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x1A1210, 0.012); // Dark earthy fog
+
+        // Camera Setup
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 45;
+
+        // Renderer Setup
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Lighting (Earthy Tones)
+        const ambientLight = new THREE.AmbientLight(0xDDCAB4, 0.5); // Beige ambient
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xC2A482, 0.9); // Warm tan dir
+        directionalLight.position.set(10, 20, 10);
+        scene.add(directionalLight);
+
+        const pointLight = new THREE.PointLight(0x899276, 1.2, 150); // Olive Point
+        pointLight.position.set(-20, -10, 20);
+        scene.add(pointLight);
+        
+        const pointLightRust = new THREE.PointLight(0x8A4A33, 1.0, 150); // Rust Point
+        pointLightRust.position.set(20, 10, -10);
+        scene.add(pointLightRust);
+
+        // Main 3D Object
+        const mainGroup = new THREE.Group();
+        scene.add(mainGroup);
+
+        // Center Wireframe Icosahedron
+        const icoGeo = new THREE.IcosahedronGeometry(14, 1);
+        const icoMat = new THREE.MeshStandardMaterial({ 
+            color: 0xDDCAB4, // Beige
+            wireframe: true,
+            transparent: true,
+            opacity: 0.25
+        });
+        const icoMesh = new THREE.Mesh(icoGeo, icoMat);
+        mainGroup.add(icoMesh);
+
+        // Inner Solid geometric
+        const innerGeo = new THREE.IcosahedronGeometry(6, 0);
+        const innerMat = new THREE.MeshStandardMaterial({ 
+            color: 0x5A2C1C, // Dark brown
+            roughness: 0.6,
+            metalness: 0.3
+        });
+        const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+        mainGroup.add(innerMesh);
+
+        // Outer Rings
+        const ringGeo = new THREE.TorusGeometry(22, 0.5, 16, 100);
+        
+        // Sage Green Ring
+        const ringMat1 = new THREE.PointsMaterial({
+            color: 0x899276, // Olive/Sage
+            size: 0.2,
+            transparent: true,
+            opacity: 0.6
+        });
+        const ringPoints = new THREE.Points(ringGeo, ringMat1);
+        ringPoints.rotation.x = Math.PI / 2;
+        mainGroup.add(ringPoints);
+
+        // Rust Ring
+        const ringMat2 = new THREE.PointsMaterial({
+            color: 0x8A4A33, // Rust
+            size: 0.2,
+            transparent: true,
+            opacity: 0.6
+        });
+        const ringPoints2 = new THREE.Points(ringGeo, ringMat2);
+        ringPoints2.rotation.y = Math.PI / 2;
+        mainGroup.add(ringPoints2);
+
+        // Fancy Party Effects (Confetti/Snow Particles)
+        const particleCount = 3500;
+        const pGeometry = new THREE.BufferGeometry();
+        const pPositions = new Float32Array(particleCount * 3);
+        const pVelocities = [];
+        const pColors = new Float32Array(particleCount * 3);
+
+        // Earthy Palette
+        const colorPalette = [
+            new THREE.Color(0xDDCAB4), // Beige/Cream
+            new THREE.Color(0xC2A482), // Tan/Warm
+            new THREE.Color(0x8A4A33), // Rust/Terracotta
+            new THREE.Color(0x5A2C1C), // Dark Brown
+            new THREE.Color(0x899276), // Olive Green
+            new THREE.Color(0x677353)  // Darker Sage
+        ];
+
+        for (let i = 0; i < particleCount; i++) {
+            pPositions[i * 3] = (Math.random() - 0.5) * 150; 
+            pPositions[i * 3 + 1] = (Math.random() - 0.5) * 150; 
+            pPositions[i * 3 + 2] = (Math.random() - 0.5) * 100 - 10; 
+
+            pVelocities.push({
+                x: (Math.random() - 0.5) * 0.1,
+                y: (Math.random() - 0.5) * 0.2 - 0.05,
+                z: (Math.random() - 0.5) * 0.1,
+                rot: (Math.random() - 0.5) * 0.1
+            });
+
+            const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            pColors[i * 3] = color.r;
+            pColors[i * 3 + 1] = color.g;
+            pColors[i * 3 + 2] = color.b;
+        }
+
+        pGeometry.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+        pGeometry.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+
+        function createDotTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const context = canvas.getContext('2d');
+            const gradient = context.createRadialGradient(16, 16, 0, 16, 16, 16);
+            gradient.addColorStop(0, 'rgba(255,255,255,1)');
+            gradient.addColorStop(0.3, 'rgba(255,255,255,0.8)');
+            gradient.addColorStop(1, 'rgba(255,255,255,0)');
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, 32, 32);
+            
+            const texture = new THREE.Texture(canvas);
+            texture.needsUpdate = true;
+            return texture;
+        }
+
+        const pMaterial = new THREE.PointsMaterial({
+            size: 1.2,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.9,
+            map: createDotTexture(),
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const particleSystem = new THREE.Points(pGeometry, pMaterial);
+        scene.add(particleSystem);
+
+        let mouseX = 0;
+        let mouseY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        });
+
+        document.addEventListener('touchmove', (event) => {
+            if(event.touches.length > 0) {
+                mouseX = (event.touches[0].clientX - windowHalfX);
+                mouseY = (event.touches[0].clientY - windowHalfY);
+            }
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            mainGroup.rotation.x += 0.0015;
+            mainGroup.rotation.y += 0.002;
+            
+            icoMesh.rotation.x = Math.sin(time * 0.5) * 0.3;
+            icoMesh.rotation.y = time * 0.15;
+            
+            innerMesh.rotation.x = time * -0.5;
+            innerMesh.rotation.y = time * -0.3;
+
+            let targetX = mouseX * 0.04;
+            let targetY = mouseY * 0.04;
+            
+            camera.position.x += (targetX - camera.position.x) * 0.05;
+            camera.position.y += (-targetY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            const positionsAttributes = pGeometry.attributes.position.array;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                
+                positionsAttributes[i3] += pVelocities[i].x;
+                positionsAttributes[i3 + 1] += pVelocities[i].y;
+                positionsAttributes[i3 + 2] += pVelocities[i].z;
+
+                positionsAttributes[i3] += Math.sin(time * 2 + i) * 0.01;
+                positionsAttributes[i3 + 2] += Math.cos(time * 2 + i) * 0.01;
+
+                if (positionsAttributes[i3 + 1] < -80) positionsAttributes[i3 + 1] = 80;
+                if (positionsAttributes[i3 + 1] > 80) pVelocities[i].y *= -1;
+                
+                if (positionsAttributes[i3] < -80) positionsAttributes[i3] = 80;
+                if (positionsAttributes[i3] > 80) positionsAttributes[i3] = -80;
+            }
+            pGeometry.attributes.position.needsUpdate = true;
+            
+            ringMat1.opacity = 0.4 + Math.sin(time * 1.5) * 0.2;
+            ringMat2.opacity = 0.4 + Math.cos(time * 1.2) * 0.2;
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+                animate();
+            }, 1000);
+        });
+        
+    </script>
+</body>
+</html>
