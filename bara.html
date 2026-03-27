@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교독하자</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        :root {
+            /* 컬러 팔레트: 고급스러운 남색과 크림 베이지 */
+            --bg-navy: #2B3A4A;      /* 외곽 배경 (기존 이미지의 배경 느낌을 남색으로) */
+            --paper-cream: #F8F5EE;  /* 중앙 포스터 배경 (크림베이지) */
+            --text-dark: #1E293B;    /* 기본 텍스트 색상 */
+            --badge-navy: #4A5D73;   /* 뱃지(라벨) 배경색 - 부드러운 남색 */
+            --ribbon-brown: #B08D5B; /* 리본 색상 (브라운/골드 톤, 네이비와 잘 어울림) */
+            --border-color: #7A8E89; /* 박스 테두리 색상 */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-navy);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 1rem;
+        }
+
+        /* 중앙 포스터 영역 */
+        .poster {
+            background-color: var(--paper-cream);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            padding: 5rem 2.5rem 4rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 용지 질감을 아주 살짝 줌 */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        /* 오른쪽 위 리본 (책갈피) */
+        .ribbon {
+            position: absolute;
+            top: -15px;
+            right: 45px;
+            background-color: var(--ribbon-brown);
+            color: white;
+            padding: 1.5rem 1.2rem 2.5rem 1.2rem;
+            font-family: 'Gowun Batang', serif;
+            font-size: 1.2rem;
+            text-align: center;
+            line-height: 1.5;
+            box-shadow: 3px 6px 15px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        .ribbon::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-left: 1.8rem solid var(--ribbon-brown);
+            border-right: 1.8rem solid var(--ribbon-brown);
+            border-bottom: 1.2rem solid var(--paper-cream);
+            width: 100%;
+        }
+
+        /* 메인 타이틀 */
+        .title-wrapper {
+            text-align: center;
+            margin-bottom: 4rem;
+            width: 100%;
+        }
+
+        .main-title {
+            font-family: 'Gowun Batang', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: transparent;
+            -webkit-text-stroke: 1.2px #1A2838;
+            letter-spacing: 0.1em;
+            position: relative;
+            text-align: center;
+        }
+
+        /* 글자 겹침 효과 시뮬레이션 */
+        .main-title-text {
+            color: #1A2838;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .main-title-text::after {
+            content: '교환독서';
+            position: absolute;
+            left: -3px;
+            top: 2px;
+            color: rgba(74, 93, 115, 0.2);
+            z-index: -1;
+        }
+
+        /* 하단 컨텐츠 박스 */
+        .content-box {
+            border: 1.5px solid var(--badge-navy);
+            width: 100%;
+            padding: 3.5rem 1.5rem 2rem;
+            position: relative;
+        }
+
+        /* 박스 상단 뱃지 타이틀 ('이번 달 도서' 스타일) */
+        .box-title {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--badge-navy);
+            color: white;
+            padding: 0.4rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        /* 리스트 스타일 */
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .badge {
+            background-color: var(--badge-navy);
+            color: white;
+            padding: 0.4rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            min-width: 110px;
+            text-align: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .item-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding-top: 0.1rem;
+        }
+
+        .description {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: var(--text-dark);
+            word-break: keep-all;
+            font-weight: 500;
+        }
+
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            color: var(--ribbon-brown);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: opacity 0.2s, transform 0.2s;
+            margin-top: 0.2rem;
+        }
+
+        .link-btn:hover {
+            opacity: 0.8;
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 500px) {
+            .poster {
+                padding: 4rem 1.5rem 3rem;
+            }
+            .ribbon {
+                right: 20px;
+                padding: 1.2rem 1rem 2rem 1rem;
+                font-size: 1.1rem;
+            }
+            .main-title {
+                font-size: 2.8rem;
+            }
+            .main-title-text::after {
+                font-size: 2.8rem;
+            }
+            .list-item {
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: flex-start;
+            }
+            .badge {
+                min-width: auto;
+                padding: 0.3rem 1.2rem;
+            }
+            .content-box {
+                padding: 3rem 1.2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poster">
+        <!-- 북마크 리본 -->
+        <div class="ribbon">책피<br바라</div>
+
+        <!-- 메인 타이틀 ('지식줍줍' 스타일) -->
+        <div class="title-wrapper">
+            <h1 class="main-title">
+                <span class="main-title-text">교환독서</span>
+            </h1>
+        </div>
+
+        <!-- 컨텐츠 박스 ('이번 달 도서' 파트) -->
+        <div class="content-box">
+            <div class="box-title">우리가 고른 책들</div>
+            
+            <div class="list-container">
+                <!-- 민재 -->
+                <div class="list-item">
+                    <div class="badge">민재's PICK</div>
+                    <div class="item-content">
+                        <div class="description">마지막의 마지막까지 끝내 놓지 못하는 창백한 손</div>
+                        <a href="https://product.kyobobook.co.kr/detail/S000218147274" target="_blank" rel="noopener noreferrer" class="link-btn">책 보러가기 →</a>
+                    </div>
+                </div>
+
+                <!-- 서인 -->
+                <div class="list-item">
+                    <div class="badge">서인's PICK</div>
+                    <div class="item-content">
+                        <div class="description">어느 날, 나와 꼭 닮았지만<br>나보다 정확한 마음을 가진 유령이 나타난다면</div>
+                        <a href="https://product.kyobobook.co.kr/detail/S000000619941" target="_blank" rel="noopener noreferrer" class="link-btn">책 보러가기 →</a>
+                    </div>
+                </div>
+
+                <!-- 진유 -->
+                <div class="list-item">
+                    <div class="badge">진유's PICK</div>
+                    <div class="item-content">
+                        <div class="description">진유는 무례한 사람이 싫었구나</div>
+                        <a href="https://product.kyobobook.co.kr/detail/S000201447314" target="_blank" rel="noopener noreferrer" class="link-btn">책 보러가기 →</a>
+                    </div>
+                </div>
+
+                <!-- 윤서 -->
+                <div class="list-item">
+                    <div class="badge">윤서's PICK</div>
+                    <div class="item-content">
+                        <div class="description">난 고전이 좋다</div>
+                        <a href="https://product.kyobobook.co.kr/detail/S000001930216" target="_blank" rel="noopener noreferrer" class="link-btn">책 보러가기 →</a>
+                    </div>
+                </div>
+
+                <!-- 하진 -->
+                <div class="list-item">
+                    <div class="badge">하진's PICK</div>
+                    <div class="item-content">
+                        <div class="description">안전하게 규제된 세계 너머,<br>더욱 다양한 욕망이 활보하는 새로운 낙원으로</div>
+                        <a href="https://product.kyobobook.co.kr/detail/S000217445026" target="_blank" rel="noopener noreferrer" class="link-btn">책 보러가기 →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
