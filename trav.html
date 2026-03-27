@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나랑 여행가조~~💕</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fce4ec;
+            /* 부드러운 핑크빛 배경 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .ticket-container {
+            position: relative;
+            filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.15));
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .ticket-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .ticket {
+            display: flex;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 850px;
+            max-width: 100%;
+        }
+
+        /* 가운데 절취선 효과를 위한 반원 */
+        .ticket::before,
+        .ticket::after {
+            content: '';
+            position: absolute;
+            background: #fce4ec;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+        }
+
+        .ticket::before {
+            left: -20px;
+        }
+
+        /* 왼쪽 섹션 (메인 티켓) */
+        .left-section {
+            padding: 40px;
+            flex-grow: 1;
+            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%);
+            position: relative;
+            color: #333;
+            border-right: 4px dashed #fff;
+        }
+
+        /* 오른쪽 섹션 (티켓 절취선 오른쪽) */
+        .right-section {
+            width: 280px;
+            padding: 40px 25px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 오른쪽 절취선 반원 위치 조정 계산 - JavaScript 없이 CSS로 처리 위해 right-section 쪽에 맞춤 */
+        .ticket::after {
+            right: 260px;
+            /* 오른쪽 섹션 너비(280) - 반원 반지름(20) */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .airline {
+            font-size: 26px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-block {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* 출발/도착 아이콘 섹션 */
+        .flight-path {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .city {
+            text-align: center;
+            flex: 1;
+        }
+
+        .city-code {
+            font-size: 45px;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .city-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 8px;
+        }
+
+        .flight-icon-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .plane-line {
+            width: 100%;
+            height: 2px;
+            border-top: 2px dotted #fff;
+            position: absolute;
+            top: 50%;
+            z-index: 1;
+        }
+
+        .plane-icon {
+            font-size: 32px;
+            color: #fff;
+            z-index: 2;
+            background: transparent;
+            padding: 0 10px;
+            animation: fly 3s infinite ease-in-out;
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translate(-10px, 0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(10px, -5px) rotate(5deg);
+            }
+
+            100% {
+                transform: translate(-10px, 0) rotate(0deg);
+            }
+        }
+
+        .barcode {
+            width: 100%;
+            height: 70px;
+            background: repeating-linear-gradient(to right,
+                    #333 0,
+                    #333 3px,
+                    transparent 3px,
+                    transparent 6px,
+                    #333 6px,
+                    #333 10px,
+                    transparent 10px,
+                    transparent 12px,
+                    #333 12px,
+                    #333 14px,
+                    transparent 14px,
+                    transparent 18px);
+            margin-bottom: 25px;
+        }
+
+        .right-info {
+            text-align: left;
+            width: 100%;
+        }
+
+        .right-info .info-block {
+            margin-bottom: 15px;
+        }
+
+        .right-info .label {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .right-info .value {
+            color: #333;
+            font-size: 18px;
+        }
+
+        .right-info .main-message-box {
+            background-color: #ffeef2;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid #ffccd9;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .right-info .main-message-box:hover {
+            background-color: #ffdce5;
+            transform: scale(1.02);
+        }
+
+        .message {
+            font-size: 20px;
+            font-weight: 900;
+            color: #ff4757;
+            animation: heartBeat 1.5s infinite;
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+
+            14% {
+                transform: scale(1.05);
+            }
+
+            28% {
+                transform: scale(1);
+            }
+
+            42% {
+                transform: scale(1.05);
+            }
+
+            70% {
+                transform: scale(1);
+            }
+        }
+
+        .stamp {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            width: 90px;
+            height: 90px;
+            border: 4px solid rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.85);
+            transform: rotate(-15deg);
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.2;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4) inset;
+        }
+
+        /* 폰트/레이아웃 반응형 처리 */
+        @media (max-width: 768px) {
+            .ticket {
+                flex-direction: column;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .left-section {
+                border-right: none;
+                border-bottom: 4px dashed #fff;
+            }
+
+            .right-section {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .ticket::after {
+                top: auto;
+                bottom: 240px;
+                /* 오른쪽 섹션 높이에 맞춤 */
+                right: -20px;
+                transform: none;
+            }
+
+            .ticket::before {
+                top: auto;
+                bottom: 240px;
+                left: -20px;
+                transform: none;
+            }
+
+            .stamp {
+                width: 70px;
+                height: 70px;
+                font-size: 12px;
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        /* 배경 비행기 및 구름 애니메이션 */
+        .bg-animations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-plane, .cloud {
+            position: absolute;
+            left: -200px;
+            user-select: none;
+        }
+
+        .bg-plane {
+            color: rgba(255, 100, 150, 0.15); 
+            text-shadow: 2px 2px 10px rgba(255,255,255,0.4);
+            transform: rotate(15deg); /* 비행기가 살짝 위를 향하도록 */
+        }
+
+        .plane1 {
+            top: 15%;
+            font-size: 150px;
+            animation: flyBgPlane 20s linear infinite;
+        }
+
+        .plane2 {
+            top: 75%;
+            font-size: 80px;
+            animation: flyBgPlane 28s linear infinite;
+            animation-delay: 7s;
+        }
+
+        .cloud {
+            color: rgba(255, 255, 255, 0.7);
+            filter: blur(1px);
+        }
+
+        .cloud1 {
+            top: 25%;
+            font-size: 140px;
+            animation: flyBgCloud 35s linear infinite;
+        }
+
+        .cloud2 {
+            top: 65%;
+            font-size: 100px;
+            animation: flyBgCloud 42s linear infinite;
+            animation-delay: 12s;
+        }
+
+        .cloud3 {
+            top: 85%;
+            font-size: 80px;
+            animation: flyBgCloud 30s linear infinite;
+            animation-delay: 4s;
+        }
+
+        @keyframes flyBgPlane {
+            0% { transform: translateX(0) scale(1) rotate(10deg); opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateX(calc(100vw + 400px)) scale(1) rotate(10deg); opacity: 0; }
+        }
+
+        @keyframes flyBgCloud {
+            0% { transform: translateX(0); opacity: 0; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateX(calc(100vw + 400px)); opacity: 0; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 배경 애니메이션 컨테이너 -->
+    <div class="bg-animations">
+        <div class="cloud cloud1">☁️</div>
+        <div class="bg-plane plane1">✈️</div>
+        <div class="cloud cloud2">☁️</div>
+        <div class="bg-plane plane2">✈️</div>
+        <div class="cloud cloud3">☁️</div>
+    </div>
+
+    <div class="ticket-container">
+        <div class="ticket">
+            <!-- 왼쪽 메인 비행기 티켓 -->
+            <div class="left-section">
+                <div class="stamp">
+                    APPROVED<br>LOVE ♥
+                </div>
+                <div class="header">
+                    <div class="airline">✈️ LOVE AIRLINES</div>
+                    <h1>BOARDING PASS</h1>
+                </div>
+
+                <div class="flight-path">
+                    <div class="city">
+                        <div class="city-code">KOR</div>
+                        <div class="city-name">SEOUL</div>
+                    </div>
+                    <div class="flight-icon-container">
+                        <div class="plane-line"></div>
+                        <div class="plane-icon">✈</div>
+                    </div>
+                    <div class="city">
+                        <div class="city-code">JPN</div>
+                        <div class="city-name">JAPAN</div>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="info-column">
+                        <div class="info-block">
+                            <div class="label">Passenger (To)</div>
+                            <div class="value">장성빈</div>
+                        </div>
+                        <div class="info-block">
+                            <div class="label">Date (일시)</div>
+                            <div class="value">06 / 06</div>
+                        </div>
+                    </div>
+                    <div class="info-column">
+                        <div class="info-block">
+                            <div class="label">Invited By (From)</div>
+                            <div class="value">김민재</div>
+                        </div>
+                        <div class="info-block">
+                            <div class="label">Class</div>
+                            <div class="value">First Class VIP</div>
+                        </div>
+                    </div>
+                    <div class="info-column">
+                        <div class="info-block">
+                            <div class="label">Gate</div>
+                            <div class="value">♥ 01</div>
+                        </div>
+                        <div class="info-block">
+                            <div class="label">Seat</div>
+                            <div class="value">01A</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 오른쪽 절취선 영역 -->
+            <div class="right-section">
+                <div class="barcode"></div>
+                <div class="right-info">
+                    <div class="info-block">
+                        <div class="label">Passenger</div>
+                        <div class="value">장성빈</div>
+                    </div>
+                    <div class="info-block">
+                        <div class="label">Destination</div>
+                        <div class="value">JAPAN</div>
+                    </div>
+                    <div class="info-block">
+                        <div class="label">Date</div>
+                        <div class="value">06 / 06</div>
+                    </div>
+                    <a href="https://www.skyscanner.co.kr/transport/flights/sela/jp/260605/260608/?adultsv2=1&cabinclass=economy&childrenv2=&ref=home&rtn=1&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false"
+                        target="_blank" class="main-message-box">
+                        <div class="message">나랑 여행 갈래? 💕</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
