@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비밀 초대장 💌</title>
+<style>
+    /* 감성적인 폰트 불러오기 */
+    @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+    
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        /* 비밀스러운 밤 느낌의 배경 */
+        background: radial-gradient(circle at center, #2c3e50 0%, #000000 100%);
+        font-family: 'Gowun Dodum', sans-serif;
+        color: #fff;
+        overflow: hidden;
+    }
+
+    .invitation-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        max-width: 80%;
+        width: 350px;
+        animation: fadeIn 2s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .secret-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        animation: pulse 2s infinite;
+    }
+
+    .title {
+        font-size: 1.1rem;
+        color: #ff9a9e;
+        margin-bottom: 25px;
+        letter-spacing: 3px;
+    }
+
+    .main-message {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #fff;
+        margin-bottom: 30px;
+        line-height: 1.4;
+        text-shadow: 0 0 15px rgba(255, 154, 158, 0.7);
+    }
+
+    .details {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 30px;
+        font-size: 1.2rem;
+        line-height: 1.8;
+        border-left: 3px solid #ff9a9e;
+    }
+
+    .highlight {
+        color: #ff9a9e;
+        font-weight: bold;
+    }
+
+    .ending {
+        font-size: 1.5rem;
+        color: #ffb199;
+        font-weight: bold;
+    }
+
+    /* 애니메이션 효과 */
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+</style>
+</head>
+<body>
+
+<div class="invitation-card">
+    <div class="secret-icon">🤫💌</div>
+    <div class="title">TOP SECRET</div>
+    
+    <div class="main-message">
+        장성빈 짱 사랑해!
+    </div>
+    
+    <div class="details">
+        3월 27일<br>
+        오후 11시 30분까지<br>
+        <span class="highlight">GS25</span>로 와
+    </div>
+    
+    <div class="ending">
+        사랑해 ❤️
+    </div>
+</div>
+
+</body>
+</html>
