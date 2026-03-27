@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우리 둘만의 비밀 초대장 💌</title>
+    <style>
+        /* 기본 고딕 스타일 적용 및 배경 검은색 설정 */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000000; /* 검은색 배경 */
+            /* 시스템 고딕 폰트 스택 */
+            font-family: 'Pretendard-Regular', 'Nanum Gothic', 'Malgun Gothic', AppleSDGothicNeo, sans-serif;
+            color: #ffffff;
+            overflow: hidden; /* 꽃잎과 기타가 화면 밖으로 나가지 않도록 */
+        }
+
+        /* 하얀색 네온 텍스트 효과 정의 */
+        .neon-text {
+            color: #ffffff;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #fff,
+                0 0 40px #fff,
+                0 0 80px #fff;
+        }
+
+        .invitation-card {
+            background: rgba(255, 255, 255, 0.03); /* 아주 살짝 투명한 배경 */
+            padding: 50px 30px;
+            border-radius: 20px;
+            /* 카드의 하얀색 네온 테두리 */
+            border: 2px solid #ffffff;
+            box-shadow: 
+                0 0 10px #fff,
+                0 0 20px #fff;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            /* 카드가 둥둥 떠있는 애니메이션 효과 */
+            animation: float 3s ease-in-out infinite;
+            z-index: 10; /* 카드보다 이모티콘이 위에 뜨도록 */
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .secret-title {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            opacity: 0.8;
+            font-weight: normal;
+        }
+
+        .main-message {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 35px;
+            line-height: 1.4;
+        }
+
+        .details {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 35px;
+            font-size: 1.25rem;
+            line-height: 2;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            font-weight: normal;
+        }
+
+        .highlight {
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        /* 하얀색 네온 버튼 스타일 */
+        .love-button {
+            background: none;
+            border: 2px solid #ffffff;
+            border-radius: 50px;
+            padding: 18px 35px;
+            font-size: 1.6rem;
+            font-family: inherit; /* body의 폰트 상속 */
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            box-shadow: 0 0 10px #fff;
+            font-weight: bold;
+        }
+
+        .love-button:hover {
+            box-shadow: 0 0 15px #fff, 0 0 30px #fff;
+            transform: scale(1.05);
+        }
+
+        .love-button:active {
+            box-shadow: 0 0 5px #fff;
+            transform: scale(0.95);
+        }
+
+        /* 떨어지는 요소 스타일 (꽃, 기타) */
+        .falling-element {
+            position: fixed;
+            top: -20px;
+            pointer-events: none;
+            z-index: 1; /* 카드 뒤로 */
+            animation: fall 6s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg); /* 떨어지며 회전 */
+            }
+        }
+
+        /* 뿅! 하고 나타나는 극적 윙크 이모티콘 스타일 */
+        #emoji-pop {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0); /* 처음엔 숨김 */
+            font-size: 12rem;
+            z-index: 100; /* 최상단 */
+            display: none; /* 클릭 전까지 숨김 */
+            text-shadow: 
+                0 0 20px #fff,
+                0 0 40px #fff;
+        }
+
+        /* 뿅! 애니메이션 정의 */
+        @keyframes pop-in {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } /* 크게 */
+            70% { transform: translate(-50%, -50%) scale(0.9); } /* 살짝 작게 */
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } /* 정사이즈 */
+        }
+
+        /* 사라지는 애니메이션 정의 */
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .animate-pop {
+            display: block !important;
+            animation: pop-in 0.5s ease-out forwards;
+        }
+
+        .animate-fade {
+            animation: fade-out 0.5s ease-in forwards;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="falling-container"></div>
+
+    <div id="emoji-pop" class="neon-text">😉✨</div>
+
+    <div class="invitation-card">
+        <div class="secret-title neon-text">쉿! 우리 둘만의 비밀 초대장 💌</div>
+        
+        <div class="main-message neon-text">
+            장성빈 짱 사랑해!
+        </div>
+        
+        <div class="details neon-text">
+            📅 3월 27일<br>
+            ⏰ 오후 11시 30분까지<br>
+            📍 <span class="highlight">GS25</span>로 와
+        </div>
+        
+        <button class="love-button neon-text" onclick="showDramaticEmoji()">
+            사랑해 ❤️
+        </button>
+    </div>
+
+    <script>
+        // 떨어지는 요소 생성 함수 (꽃과 기타 혼합)
+        function createFallingElement() {
+            const container = document.getElementById('falling-container');
+            const element = document.createElement('div');
+            element.classList.add('falling-element');
+            element.classList.add('neon-text'); // 요소에도 네온 효과 적용
+
+            // 꽃잎(🌸, 🌼)과 기타(🎸) 중 랜덤 선택
+            const types = ['🌸', '🎸', '🌼'];
+            element.innerText = types[Math.floor(Math.random() * types.length)];
+
+            element.style.left = Math.random() * 100 + 'vw'; // 랜덤 가로 위치
+            element.style.animationDuration = Math.random() * 3 + 4 + 's'; // 랜덤 속도 (4~7초)
+            element.style.fontSize = Math.random() * 1 + 1 + 'rem'; // 랜덤 크기 (1~2rem)
+
+            container.appendChild(element);
+
+            // 애니메이션 종료 후 요소 삭제
+            setTimeout(() => {
+                element.remove();
+            }, 7000); 
+        }
+
+        // 0.4초마다 요소 생성
+        setInterval(createFallingElement, 400);
+
+        // 극적인 윙크 이모지 보여주기 함수
+        function showDramaticEmoji() {
+            const emojiDiv = document.getElementById('emoji-pop');
+            
+            // 이미 애니메이션 중이면 중복 실행 방지
+            if (emojiDiv.classList.contains('animate-pop')) return;
+
+            // '뿅!' 애니메이션 적용
+            emojiDiv.classList.add('animate-pop');
+
+            // 1.5초 후 사라지는 애니메이션 적용
+            setTimeout(() => {
+                emojiDiv.classList.remove('animate-pop');
+                emojiDiv.classList.add('animate-fade');
+            }, 1500);
+
+            // 2초 후 완전 숨김 및 클래스 초기화
+            setTimeout(() => {
+                emojiDiv.classList.remove('animate-fade');
+                emojiDiv.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>
