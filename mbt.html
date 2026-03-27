@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find My Type! - 독서 취향 테스트</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDFBF7;
+            --text-color: #222222;
+            --box-bg: #FFFFFF;
+            --box-border: #222222;
+            --yes-color: #5B8DF8;
+            --yes-bg: #F2F6FF;
+            --no-color: #F56262;
+            --no-bg: #FFF5F5;
+            --result-bg: #FDF0F0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Gowun Dodum', sans-serif;
+            color: var(--text-color);
+            background-color: #E9E6E2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 3.2rem;
+            color: var(--text-color);
+            margin: 0;
+            font-weight: normal;
+            letter-spacing: 2px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .card-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .question-card {
+            background: var(--box-bg);
+            border: 2px solid var(--box-border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            font-size: 1.35rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            width: 100%;
+            box-sizing: border-box;
+            word-break: keep-all;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.06);
+            opacity: 0;
+            animation: fadeInSlideUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-family: inherit;
+            font-weight: 600;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: transparent;
+            opacity: 0;
+            animation: fadeInSlideUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        .btn:nth-child(1) { animation-delay: 0.1s; }
+        .btn:nth-child(2) { animation-delay: 0.2s; }
+
+        .btn span {
+            position: absolute;
+            right: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: normal;
+        }
+
+        .btn-yes {
+            border: 2px solid var(--yes-color);
+            color: var(--yes-color);
+            background-color: var(--yes-bg);
+        }
+
+        .btn-yes:active {
+            background-color: var(--yes-color);
+            color: white;
+            transform: scale(0.98);
+        }
+
+        .btn-no {
+            border: 2px dashed var(--no-color);
+            color: var(--no-color);
+            background-color: var(--no-bg);
+        }
+
+        .btn-no:active {
+            background-color: var(--no-color);
+            color: white;
+            transform: scale(0.98);
+        }
+
+        @media (hover: hover) {
+            .btn-yes:hover { background-color: var(--yes-bg); border-color: #4A73CC; transform: translateY(-2px); }
+            .btn-no:hover { background-color: var(--no-bg); border-color: #D45151; transform: translateY(-2px); }
+        }
+
+        .result-card {
+            background: var(--result-bg);
+            color: #333333;
+            border-radius: 32px;
+            padding: 4rem 2rem;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            opacity: 0;
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .result-type {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 3.5rem;
+            color: #D46666;
+            margin-bottom: 1rem;
+            letter-spacing: 3px;
+        }
+
+        .result-desc {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #222222;
+            word-break: keep-all;
+        }
+
+        .restart-btn {
+            background: transparent;
+            border: 2px solid #555;
+            color: #555;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 1s ease 0.5s forwards;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .restart-btn:hover {
+            background: #555;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutSlideUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hidden-fast {
+            animation: fadeOutSlideUp 0.3s ease forwards !important;
+        }
+
+        .store-links {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .store-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #111;
+            background-color: #FDFBF7;
+            padding: 0.8rem 1.8rem;
+            border-radius: 20px;
+            font-size: 1.15rem;
+            font-family: inherit;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .store-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+        }
+
+        .store-btn svg {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .book-list-container {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            padding: 1.5rem 1rem;
+            text-align: left;
+        }
+
+        .book-list-title {
+            font-size: 1.1rem;
+            color: #D46666;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .book-item {
+            font-size: 0.95rem;
+            color: #333333;
+            margin-bottom: 0.8rem;
+            padding-left: 1.2rem;
+            position: relative;
+            line-height: 1.4;
+            word-break: keep-all;
+        }
+
+        .book-item::before {
+            content: '📖';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 0.9rem;
+        }
+
+        .book-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ---------------- Start Screen ---------------- */
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+            width: 100%;
+            flex: 1;
+            padding: 2rem 0;
+        }
+
+        .cover-title {
+            font-family: inherit;
+            font-size: 5.5rem;
+            font-weight: 900;
+            color: #FFA1A1;
+            line-height: 1;
+            margin: 0;
+            letter-spacing: -3px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+        }
+
+        .cover-subtitle {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 3.8rem;
+            color: #FFA1A1;
+            margin: -0.5rem 0 1rem 0;
+            transform: rotate(-3deg);
+            font-weight: normal;
+        }
+
+        .cover-graphic {
+            width: 220px;
+            height: 250px;
+            margin: 1rem 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .cover-char-path {
+            fill: none;
+            stroke: #FFA1A1;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0); }
+        }
+
+        .start-btn {
+            background-color: #FFA1A1;
+            color: white;
+            font-size: 1.5rem;
+            font-family: inherit;
+            font-weight: bold;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            animation: pulseBtn 1.5s infinite;
+            box-shadow: 0 4px 15px rgba(255, 161, 161, 0.4);
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .start-btn:hover {
+            background-color: #F88;
+        }
+
+        @keyframes pulseBtn {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 161, 161, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 161, 161, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 161, 161, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1 class="title">✨ Find My Type! ✨</h1>
+        </header>
+        <main>
+            <div id="game-container" class="card-container">
+                <!-- Content injected here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const questions = {
+            1: { text: "책을 고를 때, 줄거리 요약보다 '첫 문장'의 느낌이 더 중요하다.", yes: 2, no: 3 },
+            2: { text: "독서는 나를 현실에서 벗어나게 하는 '탈출구'여야 한다.", yes: 4, no: 5 },
+            3: { text: "독서는 나를 성장시키거나 세상을 보는 관점을 바꿔줘야 한다.", yes: 6, no: 7 },
+            4: { text: "주인공의 감정이나 사건의 전개에 깊게 파고드는 편이다.", yes: 8, no: 5 },
+            5: { text: "예쁜 문장이나 작가의 독특한 감각, 세련된 구성이 중요하다.", yes: 9, no: 10 },
+            6: { text: "사회의 아픔이나 타인의 권리 문제에 민감하게 반응하는 편이다.", yes: 11, no: 7 },
+            7: { text: "새로운 지식을 얻거나 여러 분야를 가볍게 훑어보는 것이 즐겁다.", yes: 12, no: 'G' },
+            8: { text: "결말을 모르면 잠 못 잔다. 손에 땀을 쥐는 전개가 필수다.", yes: 'A', no: 'B' },
+            9: { text: "책 한 권을 끝내기보다 여러 권을 동시에 펼쳐두고 읽는 게 편하다.", yes: 'C', no: 'B' },
+            10: { text: "낯선 장소의 공기와 타인의 일상을 엿보는 것이 설렌다.", yes: 'D', no: 'E' },
+            11: { text: "차별, 노동, 환경 등 우리 사회의 구체적인 목소리에 연대하고 싶다.", yes: 'F', no: 'G' },
+            12: { text: "아직 내 취향을 정의하기보다 이것저것 '찍어먹어' 보고 싶다.", yes: 'H', no: 'G' }
+        };
+
+        const results = {
+            'A': { title: 'A TYPE', desc: '도파민 헌터', books: ['책을 훔치는 완벽한 방법, 데이비드 호르비츠', '나는 소망한다 내게 금지된 것을, 양귀자', '포스트맨은 벨을 두 번 울린다, 제임스 M. 케인'], links: [{name: '보안책방', url: 'https://www.instagram.com/boanbooks/'}] },
+            'B': { title: 'B TYPE', desc: '감정문학러', books: ['여름과 루비, 박연준', '우리가 빛의 속도로 갈 수 없다면, 김초엽', '사랑은 하트 모양이 아니야, 김효인', '마침내 멸망하는 여름, 정', '다정, 김태우 외'] },
+            'C': { title: 'C TYPE', desc: '문장수집가', books: ['겨울어사전, 아침달 편집부와 친구들', '당신은 첫눈입니까, 이규리'], links: [{name: '서촌 그 책방', url: 'https://www.instagram.com/seochonbooks/'}] },
+            'D': { title: 'D TYPE', desc: '관찰여행자', books: ['엄마와 완벽하게 헤어지기, 김수현', '걷는 듯 천천히, 고레에다 히로카즈'], links: [{name: '독서관', url: 'https://www.instagram.com/dokseogwan/'}] },
+            'E': { title: 'E TYPE', desc: '여운사냥꾼', books: ['달빛 아래 가만히, 김종완', '유서의 일부로부터, 이토 노에'], links: [{name: '새고서림', url: 'https://www.instagram.com/saego_seorim/'}] },
+            'F': { title: 'F TYPE', desc: '확장연대형', books: ['말이 칼이 될 때, 홍성수', '페미 사냥, 이민주', '더 좋은 삶을 위한 철학, 마이클 슈어'], links: [{name: '책방 79-1', url: 'https://www.instagram.com/bookshop79.1/'}] },
+            'G': { title: 'G TYPE', desc: '관점설계자', books: ['이게 마지막 기회일지도 몰라, 더글러스 애덤스&마크 카웨다인', '비숲, 김산하'], links: [
+                {name: '더북소사이어티', url: 'https://www.instagram.com/tbs_book_society/'},
+                {name: '정글핌피', url: 'https://www.instagram.com/junglepimfy/'}
+            ] },
+            'H': { title: 'H TYPE', desc: '취향탐험가', books: ['지구에서 한아뿐, 정세랑', '불안, 알랭 드 보통', '오만과 편견, 제인 오스틴'], links: [{name: '바인다이닝', url: 'https://www.instagram.com/bar_in_ding/'}] }
+        };
+
+        let currentStep = 'start';
+        const gameContainer = document.getElementById('game-container');
+        const header = document.querySelector('header');
+
+        function renderStartScreen() {
+            header.style.display = 'none'; // Hide header on start screen
+            
+            const startDiv = document.createElement('div');
+            startDiv.className = 'start-screen';
+            startDiv.innerHTML = `
+                <h1 class="cover-title">좋은 책<br>가이드북</h1>
+                <h2 class="cover-subtitle">Find your Book Type!</h2>
+                
+                <div class="cover-graphic">
+                    <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Antennas -->
+                        <path class="cover-char-path" d="M120 40 A15 15 0 1 1 150 40 A15 15 0 1 1 120 40 Z"/>
+                        <path class="cover-char-path" d="M135 25 L150 10 M145 25 L160 10"/>
+                        <!-- Eyes -->
+                        <circle cx="130" cy="35" r="3" fill="#FFA1A1"/>
+                        <circle cx="140" cy="35" r="3" fill="#FFA1A1"/>
+                        <!-- Body Outline -->
+                        <path class="cover-char-path" d="M135 55 Q 160 90, 140 140 Q 120 180, 160 190"/>
+                        <path class="cover-char-path" d="M140 140 L 90 180 L 110 220 L 90 240"/>
+                        <path class="cover-char-path" d="M110 180 L 80 200 L 90 240 L 110 230"/>
+                        <path class="cover-char-path" d="M135 70 Q 100 90, 100 120 Q 90 140, 60 145"/>
+                        <!-- Stack of Books -->
+                        <rect x="40" y="80" width="85" height="25" rx="5" class="cover-char-path" transform="rotate(-8 80 90)"/>
+                        <rect x="30" y="110" width="90" height="30" rx="6" class="cover-char-path" transform="rotate(-15 75 125)"/>
+                    </svg>
+                </div>
+
+                <!-- Custom pulse button -->
+                <button class="start-btn" onclick="handleAnswer(1)">나의 취향 탐험하기 💕</button>
+                <div style="font-size:0.9rem; font-weight:bold; color:#FFA1A1; margin-top:25px; align-self:flex-end; padding-right:1rem;">@책피바라</div>
+            `;
+            gameContainer.appendChild(startDiv);
+        }
+
+        function renderQuestion(stepId) {
+            gameContainer.innerHTML = '';
+            
+            if (stepId === 'start') {
+                renderStartScreen();
+                return;
+            }
+            
+            header.style.display = 'block'; // Show title
+            const q = questions[stepId];
+            
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerText = q.text;
+            
+            const btnGroup = document.createElement('div');
+            btnGroup.className = 'btn-group';
+            
+            const btnYes = document.createElement('button');
+            btnYes.className = 'btn btn-yes';
+            btnYes.innerHTML = 'YES <span>→</span>';
+            btnYes.onclick = () => handleAnswer(q.yes);
+            
+            const btnNo = document.createElement('button');
+            btnNo.className = 'btn btn-no';
+            btnNo.innerHTML = 'NO <span>⇢</span>';
+            btnNo.onclick = () => handleAnswer(q.no);
+            
+            btnGroup.appendChild(btnYes);
+            btnGroup.appendChild(btnNo);
+            
+            gameContainer.appendChild(card);
+            gameContainer.appendChild(btnGroup);
+        }
+
+        function handleAnswer(nextStep) {
+            gameContainer.style.pointerEvents = 'none';
+            
+            Array.from(gameContainer.children).forEach(el => {
+                el.classList.add('hidden-fast');
+            });
+            
+            setTimeout(() => {
+                gameContainer.style.pointerEvents = 'all';
+                if (typeof nextStep === 'string') {
+                    renderResult(nextStep);
+                } else {
+                    renderQuestion(nextStep);
+                }
+            }, 300);
+        }
+
+        function renderResult(resultId) {
+            const r = results[resultId];
+            gameContainer.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            const typeLabel = document.createElement('div');
+            typeLabel.className = 'result-type';
+            typeLabel.innerText = r.title;
+            
+            const descLabel = document.createElement('div');
+            descLabel.className = 'result-desc';
+            descLabel.innerText = r.desc;
+            
+            resultCard.appendChild(typeLabel);
+            resultCard.appendChild(descLabel);
+
+            if (r.books && r.books.length > 0) {
+                const booksContainer = document.createElement('div');
+                booksContainer.className = 'book-list-container';
+                
+                const recTitle = document.createElement('div');
+                recTitle.className = 'book-list-title';
+                recTitle.innerText = '✨ 꼭 읽어봐야 할 맞춤 도서 ✨';
+                booksContainer.appendChild(recTitle);
+
+                r.books.forEach(book => {
+                    const item = document.createElement('div');
+                    item.className = 'book-item';
+                    item.innerText = book;
+                    booksContainer.appendChild(item);
+                });
+
+                resultCard.appendChild(booksContainer);
+            }
+
+            if (r.links && r.links.length > 0) {
+                const linksContainer = document.createElement('div');
+                linksContainer.className = 'store-links';
+                
+                const recText = document.createElement('div');
+                recText.style.color = '#888';
+                recText.style.fontSize = '1rem';
+                recText.style.marginBottom = '8px';
+                recText.innerText = '추천 동네 책방 구경가기 📚';
+                linksContainer.appendChild(recText);
+
+                r.links.forEach(link => {
+                    const btn = document.createElement('a');
+                    btn.className = 'store-btn';
+                    btn.href = link.url;
+                    btn.target = '_blank';
+                    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>` + link.name;
+                    linksContainer.appendChild(btn);
+                });
+
+                resultCard.appendChild(linksContainer);
+            }
+            
+            const restartBtn = document.createElement('button');
+            restartBtn.className = 'restart-btn';
+            restartBtn.innerHTML = '↺ 테스트 다시 하기';
+            restartBtn.onclick = () => {
+                currentStep = 'start';
+                handleAnswer(currentStep);
+            };
+            
+            gameContainer.appendChild(resultCard);
+            gameContainer.appendChild(restartBtn);
+        }
+
+        // Initialize the game
+        renderQuestion(currentStep);
+    </script>
+</body>
+</html>
