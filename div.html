@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우리 둘만의 비밀 초대장 💌</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 연초록 그라데이션 배경 + 땡땡이 무늬 */
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            background-image: radial-gradient(rgba(255, 255, 255, 0.2) 15%, transparent 16%),
+                              radial-gradient(rgba(255, 255, 255, 0.2) 15%, transparent 16%);
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+            font-family: 'Gowun Dodum', sans-serif;
+            color: #ffffff;
+            overflow: hidden; /* 꽃잎이 화면 밖으로 나가지 않도록 */
+        }
+
+        .invitation-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px 30px;
+            border-radius: 20px;
+            /* 하얀색 네온사인 테두리 효과 */
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            /* 하얀색 네온사인 텍스트 효과 */
+            color: #ffffff;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
+            /* 카드가 둥둥 떠있는 애니메이션 효과 */
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .secret-title {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            text-shadow: 0 0 3px #ffffff, 0 0 6px #ffffff;
+        }
+
+        .main-message {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ffffff;
+        }
+
+        .details {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 3px #ffffff, 0 0 6px #ffffff;
+        }
+
+        .highlight {
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 15px #ffffff;
+        }
+
+        /* 하얀색 네온사인 버튼 스타일 */
+        .love-button {
+            background: none;
+            border: 2px solid #ffffff;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-family: 'Gowun Dodum', sans-serif;
+            color: #ffffff;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .love-button:hover {
+            box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+            transform: scale(1.05);
+        }
+
+        .love-button:active {
+            box-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff;
+            transform: scale(0.95);
+        }
+
+        .heart {
+            display: inline-block;
+            /* 두근두근 하트 애니메이션 */
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+
+        /* 윙크 이모지 스타일 */
+        #emoji-display {
+            font-size: 5rem;
+            margin-top: 20px;
+            display: none; /* 처음에 숨겨둠 */
+        }
+
+        /* 꽃잎 스타일 */
+        .flower {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1; /* 카 뒤로 */
+            animation: fall 5s linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flowers" id="flowers"></div> <div class="invitation-card">
+        <div class="secret-title">쉿! 우리 둘만의 비밀 초대장 💌</div>
+        
+        <div class="main-message">
+            장성빈 짱 사랑해!
+        </div>
+        
+        <div class="details">
+            📅 3월 27일<br>
+            ⏰ 오후 11시 30분까지<br>
+            📍 <span class="highlight">GS25</span>로 와
+        </div>
+        
+        <button class="love-button" onclick="showEmoji()">
+            사랑해 <span class="heart">❤️</span>
+        </button>
+
+        <div id="emoji-display">😉</div>
+    </div>
+
+    <script>
+        // 꽃잎 생성 함수
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.classList.add('flower');
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.animationDuration = Math.random() * 3 + 2 + 's'; // 랜덤 속도
+            flower.style.opacity = Math.random() * 0.5 + 0.5; // 랜덤 투명도
+            flower.style.transform = `scale(${Math.random() * 0.5 + 0.5})`; // 랜덤 크기
+            document.getElementById('flowers').appendChild(flower);
+
+            setTimeout(() => {
+                flower.remove();
+            }, 5000); // 5초 후 삭제
+        }
+
+        // 꽃잎 생성 주기
+        setInterval(createFlower, 300); // 0.3초마다 꽃잎 생성
+
+        // 윙크 이모지 보여주기 함수
+        function showEmoji() {
+            document.getElementById('emoji-display').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
